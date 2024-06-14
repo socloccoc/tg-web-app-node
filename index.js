@@ -2,8 +2,8 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 
-const token = '5336424335:AAGk0uyo0qqRCrKgvr2J7GrYKK1S0MF8878';
-const webAppUrl = 'https://ornate-selkie-c27577.netlify.app';
+const token = '7389851862:AAEi8--4_HFscd294L41jny21-DOAX2PxeU';
+const webAppUrl = 'https://tg-web-app-react-gules.vercel.app/';
 
 const bot = new TelegramBot(token, {polling: true});
 const app = express();
@@ -16,18 +16,18 @@ bot.on('message', async (msg) => {
     const text = msg.text;
 
     if(text === '/start') {
-        await bot.sendMessage(chatId, 'Ниже появится кнопка, заполни форму', {
+        await bot.sendMessage(chatId, 'A button will appear below, fill out the form', {
             reply_markup: {
                 keyboard: [
-                    [{text: 'Заполнить форму', web_app: {url: webAppUrl + '/form'}}]
+                    [{text: 'Fill out the form', web_app: {url: webAppUrl + '/form'}}]
                 ]
             }
         })
 
-        await bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
+        await bot.sendMessage(chatId, 'Visit our online store using the button below', {
             reply_markup: {
                 inline_keyboard: [
-                    [{text: 'Сделать заказ', web_app: {url: webAppUrl}}]
+                    [{text: 'Place an order', web_app: {url: webAppUrl}}]
                 ]
             }
         })
@@ -37,12 +37,12 @@ bot.on('message', async (msg) => {
         try {
             const data = JSON.parse(msg?.web_app_data?.data)
             console.log(data)
-            await bot.sendMessage(chatId, 'Спасибо за обратную связь!')
-            await bot.sendMessage(chatId, 'Ваша страна: ' + data?.country);
-            await bot.sendMessage(chatId, 'Ваша улица: ' + data?.street);
+            await bot.sendMessage(chatId, 'Thank you for your feedback!')
+            await bot.sendMessage(chatId, 'Your country: ' + data?.country);
+            await bot.sendMessage(chatId, 'Your street: ' + data?.street);
 
             setTimeout(async () => {
-                await bot.sendMessage(chatId, 'Всю информацию вы получите в этом чате');
+                await bot.sendMessage(chatId, 'You will receive all the information in this chat');
             }, 3000)
         } catch (e) {
             console.log(e);
@@ -56,9 +56,9 @@ app.post('/web-data', async (req, res) => {
         await bot.answerWebAppQuery(queryId, {
             type: 'article',
             id: queryId,
-            title: 'Успешная покупка',
+            title: 'Successful purchase',
             input_message_content: {
-                message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')}`
+                message_text: `Congratulations on your purchase, you bought goods for a total of ${totalPrice}, ${products.map(item => item.title).join(', ')}`
             }
         })
         return res.status(200).json({});
